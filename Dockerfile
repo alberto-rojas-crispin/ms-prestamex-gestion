@@ -1,14 +1,10 @@
-# Use the official eclipse-temurin image with OpenJDK 21 based on Ubuntu
-FROM eclipse-temurin:21-jdk-jammy
-
-# Set the working directory inside the container
+FROM maven:3.9.7-eclipse-temurin-21 as build
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copy your application's JAR file into the container
-COPY target/ms-prestamex-gestion-0.0.1-SNAPSHOT.jar /app/ms-prestamex-gestion.jar
-
-#Exponer el puerto que usa la aplicacion
+FROM eclipse-temurin:21-jdk-jammy
+WORKDIR /app
+COPY --from=build /app/target/ms-prestamex-gestion-0.0.1-SNAPSHOT.jar /app/ms-prestamex-gestion.jar
 EXPOSE 3000
-
-# Define the command to run your application when the container starts
 CMD ["java", "-jar", "/app/ms-prestamex-gestion.jar"]
