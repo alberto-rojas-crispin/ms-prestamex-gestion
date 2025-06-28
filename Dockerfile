@@ -5,7 +5,10 @@ FROM eclipse-temurin:21-jdk-jammy
 WORKDIR /app
 
 # Copy your application's JAR file into the container
-COPY ms-prestamex-gestion.jar /app/ms-prestamex-gestion.jar
+COPY target/ms-prestamex-gestion-0.0.1-SNAPSHOT.jar /app/ms-prestamex-gestion.jar
+
+#Exponer el puerto que usa la aplicacion
+EXPOSE 3000
 
 # Define the command to run your application when the container starts
-CMD ["java", "-jar", "ms-prestamex-gestion.jar"]
+CMD ["java", "-jar", "/app/ms-prestamex-gestion.jar"]
