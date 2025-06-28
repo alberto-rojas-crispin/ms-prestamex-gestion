@@ -1,7 +1,7 @@
 FROM maven:3.9.7-eclipse-temurin-21 as build
 WORKDIR /app
 COPY . .
-RUN mvn clean package -DskipTests
+RUN java -version && mvn -version && mvn clean package -DskipTests
 
 FROM eclipse-temurin:21-jdk-jammy
 WORKDIR /app
