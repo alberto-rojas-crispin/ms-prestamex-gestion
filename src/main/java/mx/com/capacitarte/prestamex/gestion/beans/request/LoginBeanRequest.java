@@ -2,8 +2,7 @@ package mx.com.capacitarte.prestamex.gestion.beans.request;
 
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,9 +16,9 @@ public class LoginBeanRequest implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@JsonProperty("usuario")
+	@NotBlank(message = "Usuario obligatorio")
 	private String usuario;
 
-	@JsonProperty("pass")
+	@NotBlank(message = "Password obligatorio")
 	private String pass;
 }

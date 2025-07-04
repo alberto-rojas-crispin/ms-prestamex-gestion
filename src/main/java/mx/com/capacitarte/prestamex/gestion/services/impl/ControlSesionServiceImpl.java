@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import mx.com.capacitarte.prestamex.gestion.beans.request.LoginBeanRequest;
 import mx.com.capacitarte.prestamex.gestion.beans.response.LoginBeanResponse;
 import mx.com.capacitarte.prestamex.gestion.enums.ControlSesionEnum;
 import mx.com.capacitarte.prestamex.gestion.enums.MSPrestamexGestionResponseEnum;
+import mx.com.capacitarte.prestamex.gestion.exceptions.ServiceException;
 import mx.com.capacitarte.prestamex.gestion.filters.LoginFilter;
 import mx.com.capacitarte.prestamex.gestion.repositories.ICustomControlSesionRepository;
 import mx.com.capacitarte.prestamex.gestion.services.IControlSesionService;
@@ -25,7 +27,7 @@ public class ControlSesionServiceImpl implements IControlSesionService {
 	ICustomControlSesionRepository customControlSesionRepository;
 
 	@Override
-	public Optional<LoginBeanResponse> validarAcceso(LoginBeanRequest request) throws Exception {
+	public Optional<LoginBeanResponse> validarAcceso(LoginBeanRequest request) throws ServiceException {
 		log.info("service: validarAcceso");
 		
 		try {
@@ -71,12 +73,18 @@ public class ControlSesionServiceImpl implements IControlSesionService {
 
 		} catch (SQLException sqlEx) {
 			log.error(sqlEx.getMessage());
-			throw new Exception(MSPrestamexGestionResponseEnum.WS_DATA_ERROR.getMessage() + " - validar Acceso");
-
+			throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR,
+					MSPrestamexGestionResponseEnum.WS_DATA_ERROR.getCodeResponse(),
+					MSPrestamexGestionResponseEnum.WS_DATA_ERROR.getMessage() + " - Validar Acceso",
+                    sqlEx.getMessage());
+			
 		} catch (Exception e) {
 			log.error(e.getMessage());
-			throw new Exception(MSPrestamexGestionResponseEnum.WS_BUSINESS_ERROR.getMessage() + " - validar Acceso");
-
+			throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR,
+					MSPrestamexGestionResponseEnum.WS_BUSINESS_ERROR.getCodeResponse(),
+					MSPrestamexGestionResponseEnum.WS_BUSINESS_ERROR.getMessage() + " - Validar Acceso",
+                    e.getMessage());
+			
 		}
 
 	}
