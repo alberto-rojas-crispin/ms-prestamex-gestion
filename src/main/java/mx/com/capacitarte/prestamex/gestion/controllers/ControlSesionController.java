@@ -1,9 +1,8 @@
-package mx.com.capacitarte.prestamex.gestion.controller;
+package mx.com.capacitarte.prestamex.gestion.controllers;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,16 +14,21 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
 import mx.com.capacitarte.prestamex.gestion.beans.request.LoginBeanRequest;
 import mx.com.capacitarte.prestamex.gestion.beans.response.LoginBeanResponse;
+import mx.com.capacitarte.prestamex.gestion.services.IControlSesionService;
 
 @RestController
 @RequestMapping("/login")
 @Slf4j
 public class ControlSesionController {
 
+	@Autowired
+	IControlSesionService controlSesionService;
+	
 	@PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> guardar(@RequestBody LoginBeanRequest loginReq) throws Exception {
 		log.info("Input: {} " + loginReq);
-				
+		
+		/*
 		Map<String, String> usuariosValidos = new HashMap<String, String>();
 		usuariosValidos.put("admin", "1234");
 		usuariosValidos.put("operaciones", "4321");
@@ -37,10 +41,11 @@ public class ControlSesionController {
 		
 		if(!usuariosValidos.containsKey(loginReq.getUsuario())) {
 			return ResponseEntity.noContent().build();
-		}
+		}*/
 		
-		LoginBeanResponse loginBeanResponse = null;
-		if(usuariosValidos.get(loginReq.getUsuario()).equals(loginReq.getPass())) {
+		Optional<LoginBeanResponse> loginBeanResponse = controlSesionService.validarAcceso(loginReq);
+		
+		/*if(usuariosValidos.get(loginReq.getUsuario()).equals(loginReq.getPass())) {
 			System.out.println("aq");
 			loginBeanResponse = LoginBeanResponse.builder()
 					.idUsuario("12")
@@ -52,12 +57,14 @@ public class ControlSesionController {
 					.perfil(perfilesValidos.get(loginReq.getUsuario()))
 					.estatusLogin(true)
 					.build();
-		}
+		}*/
 		
-		ResponseEntity<LoginBeanResponse> successResponseEntity = ResponseEntity.ok().body(loginBeanResponse);
+		ResponseEntity<LoginBeanResponse> successResponseEntity = null;
+		if(loginBeanResponse.isPresent())
+			successResponseEntity = ResponseEntity.ok().body(loginBeanResponse.get());
 				
 		log.info("OutPut: {}", successResponseEntity);
-		return loginBeanResponse == null ? ResponseEntity.noContent().build() :successResponseEntity;
+		return !loginBeanResponse.isPresent() ? ResponseEntity.noContent().build() : ResponseEntity.ok().body(loginBeanResponse);
 	}
 	
 	@GetMapping("/test")

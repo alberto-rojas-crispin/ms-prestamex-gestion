@@ -1,4 +1,4 @@
-package mx.com.capacitarte.prestamex.gestion.controller;
+package mx.com.capacitarte.prestamex.gestion.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
