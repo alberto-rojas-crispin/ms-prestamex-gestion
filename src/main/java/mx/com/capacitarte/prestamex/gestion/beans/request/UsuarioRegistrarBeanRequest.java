@@ -1,6 +1,7 @@
 package mx.com.capacitarte.prestamex.gestion.beans.request;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,16 +18,18 @@ public class UsuarioRegistrarBeanRequest implements Serializable {
 	private String nombreUsuario;
 	private String apPaterno;
 	private String apMaterno;
-	private String genero;
-	private String nacionalidad;
-	private String fechaNacimiento;
-	private Boolean vigencia;
 	private String telefono;
+	private String correoElectronico;
+	private String genero;
 	private String direccion;
+	private String nacionalidad;
+	private Date fechaNacimiento;
+	
+	private Boolean vigencia;
 	private String usuario;
-	private String correoEletronico;
 	private String password;
 	private Integer idPerfil;
+	
 	private String usuarioRegistra;
 	
 }

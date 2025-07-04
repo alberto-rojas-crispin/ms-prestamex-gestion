@@ -1,7 +1,5 @@
 package mx.com.capacitarte.prestamex.gestion.controllers;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -49,16 +47,38 @@ public class UsuariosController {
 	public ResponseEntity<?> registrarUsuario(@Valid @RequestBody UsuarioRegistrarBeanRequest usuarioReq) throws ServiceException {
 		log.info("Input: {} " + usuarioReq);
 		
-		UsuarioEntity usuarioEntity = null;
-		EmpleadoEntity empleadoEntity = null;
+		UsuarioEntity usuarioEntity = UsuarioEntity.builder()
+				.usuario(usuarioReq.getUsuario())
+				.password(usuarioReq.getPassword())
+				.idPerfil(usuarioReq.getIdPerfil())
+				.vigencia(usuarioReq.getVigencia())
+				.usuarioCreacion(usuarioReq.getUsuarioRegistra())
+				.build();
+		EmpleadoEntity empleadoEntity = EmpleadoEntity.builder()
+				.nombre(usuarioReq.getNombreUsuario())
+				.apPaterno(usuarioReq.getApPaterno())
+				.apMaterno(usuarioReq.getApMaterno())
+				.correoElectronico(usuarioReq.getCorreoElectronico())
+				.telefono(usuarioReq.getTelefono())
+				.direcion(usuarioReq.getDireccion())
+				.genero(usuarioReq.getGenero())
+				.nacionalidad(usuarioReq.getNacionalidad())
+				.fechaNacimiento(usuarioReq.getFechaNacimiento())
+				.vigencia(usuarioReq.getVigencia())
+				.usuarioCreacion(usuarioReq.getUsuarioRegistra())
+				.build();
 		
 		RespuestaPersistenciaBean persistenciaBean = usuariosService.registrarUsuario(usuarioEntity, empleadoEntity);
 		
+		UsuarioRegistrarBeanResponse response = UsuarioRegistrarBeanResponse.builder()
+				.estatusRegistro(persistenciaBean.getEstatusPersistencia())
+				.mensaje(persistenciaBean.getMensaje())
+				.idEmpleado(persistenciaBean.getIdEmpleado())
+				.build();
+		
 		log.info("OutPut: {}", persistenciaBean);
-		return !persistenciaBean.getEstatusPersistencia() ? ResponseEntity.noContent().build() : ResponseEntity.status(HttpStatus.CREATED).body(
-				UsuarioRegistrarBeanResponse.builder()
-				.numeroCuentaUsuario(persistenciaBean.getNumeroCuentaUsuario())
-				.build());
+		
+		return ResponseEntity.status(!persistenciaBean.getEstatusPersistencia() ? HttpStatus.BAD_REQUEST : HttpStatus.CREATED).body(response);
 	
 	}
 	

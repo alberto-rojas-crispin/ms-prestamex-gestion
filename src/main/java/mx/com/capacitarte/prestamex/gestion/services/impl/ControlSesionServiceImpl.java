@@ -48,7 +48,9 @@ public class ControlSesionServiceImpl implements IControlSesionService {
 					
 					LoginBeanResponse usuarioBean = LoginBeanResponse.builder()
 						.idUsuario(row[ControlSesionEnum.FTN_ID_USUARIO.getValue()] != null ? 
-								row[ControlSesionEnum.FTN_ID_USUARIO.getValue()].toString() : "")
+								Integer.parseInt(row[ControlSesionEnum.FTN_ID_USUARIO.getValue()].toString()) : null)
+						.idEmpleado(row[ControlSesionEnum.FTN_ID_EMPLEADO.getValue()] != null ? 
+								Integer.parseInt(row[ControlSesionEnum.FTN_ID_EMPLEADO.getValue()].toString()) : null)
 						.usuario(row[ControlSesionEnum.FTC_USUARIO.getValue()] != null ? 
 								row[ControlSesionEnum.FTC_USUARIO.getValue()].toString() : "")
 						.nombre(row[ControlSesionEnum.NOMBRE.getValue()] != null ? 
@@ -59,7 +61,12 @@ public class ControlSesionServiceImpl implements IControlSesionService {
 								row[ControlSesionEnum.APELLIDO_MATERNO.getValue()].toString() : "")
 						.genero(row[ControlSesionEnum.GENERO.getValue()] != null ? 
 								row[ControlSesionEnum.GENERO.getValue()].toString() : "")
-						.perfil("admin")
+						.idPerfil(row[ControlSesionEnum.FCN_ID_PERFIL.getValue()] != null ? 
+								Integer.parseInt(row[ControlSesionEnum.FCN_ID_PERFIL.getValue()].toString()) : null)
+						.perfil(row[ControlSesionEnum.PERFIL.getValue()] != null ? 
+								row[ControlSesionEnum.PERFIL.getValue()].toString() : "")
+						.descPerfil(row[ControlSesionEnum.DESC_PERFIL.getValue()] != null ? 
+								row[ControlSesionEnum.DESC_PERFIL.getValue()].toString() : "")
 						.estatusLogin(row[ControlSesionEnum.FCB_VIGENCIA.getValue()] != null ? 
 								row[ControlSesionEnum.FCB_VIGENCIA.getValue()].toString().equals("true") ? true : false : false)
 						.build();

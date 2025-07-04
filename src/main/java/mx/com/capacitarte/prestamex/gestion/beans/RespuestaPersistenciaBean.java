@@ -17,7 +17,7 @@ public class RespuestaPersistenciaBean implements Serializable {
 	
 	private Boolean estatusPersistencia;
 	private String mensaje;
-	private Integer numeroCuentaUsuario;
+	private Integer idEmpleado;
 	
 	
 }

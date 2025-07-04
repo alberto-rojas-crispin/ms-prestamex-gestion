@@ -15,6 +15,9 @@ public class UsuarioRegistrarBeanResponse implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Integer numeroCuentaUsuario;
+	private Integer idEmpleado;
+	private Boolean estatusRegistro;
+	private String mensaje;
+	
 	
 }

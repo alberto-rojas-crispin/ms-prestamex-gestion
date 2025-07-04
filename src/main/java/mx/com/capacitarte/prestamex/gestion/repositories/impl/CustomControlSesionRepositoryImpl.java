@@ -26,7 +26,8 @@ public class CustomControlSesionRepositoryImpl implements ICustomControlSesionRe
 			log.info("consultarUsuarios");
 			StringBuilder queryStr = new StringBuilder("SELECT \r\n");
 			
-	        queryStr.append("	       USUARIOS.FTN_ID_USUARIO,\r\n"
+	        queryStr.append("	   USUARIOS.FTN_ID_USUARIO,\r\n"
+	        		+ "        EMPL.FTN_ID_EMPLEADO,"
 	        		+ "        USUARIOS.FTC_USUARIO,\r\n"
 	        		+ "        EMPL.FTC_NOMBRE, \r\n"
 	        		+ "        EMPL.FTC_APELLIDO_PATERNO, \r\n"
@@ -34,9 +35,13 @@ public class CustomControlSesionRepositoryImpl implements ICustomControlSesionRe
 	        		+ "        EMPL.FTC_GENERO, \r\n"
 	        		+ "        EMPL.FTC_NACIONALIDAD,\r\n"
 	        		+ "        USUARIOS.FCB_VIGENCIA,\r\n"
-	        		+ "        EMPL.FCB_VIGENCIA\r\n"
-	        		+ "    FROM TTGRAL_USUARIOS USUARIOS\r\n"
-	        		+ "    INNER JOIN TTGRAL_EMPLEADOS EMPL ON EMPL.FTN_ID_EMPLEADO = USUARIOS.FTN_ID_EMPLEADO\r\n"
+	        		+ "        EMPL.FCB_VIGENCIA AS FCB_VIGENCIA_EMPLEADO,\r\n"
+	        		+ "        USUARIOS.FCN_ID_PERFIL,\r\n"
+	        		+ "        DET_CAT.FTC_DESC_DET_CATALOGO AS DESC_PERFIL,\r\n"
+	        		+ "        FTC_VALOR_CATALOGO AS PERFIL\r\n"
+	        		+ "    FROM ttgral_usuarios USUARIOS\r\n"
+	        		+ "    INNER JOIN ttgral_empleados EMPL ON EMPL.FTN_ID_EMPLEADO = USUARIOS.FTN_ID_EMPLEADO\r\n"
+	        		+ "    LEFT JOIN tcgral_detalle_catalogos DET_CAT ON DET_CAT.FTN_ID_DET_CATALOGO = USUARIOS.FCN_ID_PERFIL\r\n"
 	        		+ "    WHERE \r\n"
 	        		+ "        USUARIOS.FTC_USUARIO = :usuario \r\n"
 	        		+ "        AND USUARIOS.FTC_PASSWORD = :password \r\n");
