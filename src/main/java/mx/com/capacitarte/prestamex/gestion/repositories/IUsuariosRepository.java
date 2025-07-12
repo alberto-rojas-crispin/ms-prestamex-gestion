@@ -11,4 +11,6 @@ public interface IUsuariosRepository extends CrudRepository<UsuarioEntity, Long>
 
 	Optional<UsuarioEntity> findByUsuario(String usuario) throws SQLException;
 	
+	Optional<UsuarioEntity> findByIdEmpleado(Integer idEmpleado) throws SQLException;
+	
 }

@@ -9,4 +9,6 @@ public interface IUsuariosService {
 
 	RespuestaPersistenciaBean registrarUsuario(UsuarioEntity usuarioEntity, EmpleadoEntity empleadoEntity) throws ServiceException;
 	
+	RespuestaPersistenciaBean actualizarUsuario(UsuarioEntity usuarioEntity, EmpleadoEntity empleadoEntity) throws ServiceException;
+	
 }

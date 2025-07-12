@@ -14,43 +14,28 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UsuarioRegistrarBeanRequest implements Serializable {
+public class UsuarioActualizarBeanRequest implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@NotBlank(message = "Nombre de usuario requerido")
+	@NotNull(message="Id empleado requerido")
+	private Integer idEmpleado;
+	
 	private String nombreUsuario;
-	
-	@NotBlank(message="Apellido paterno requerido")
 	private String apPaterno;
-
-	@NotBlank(message="Apellido materno requerido")
 	private String apMaterno;
-	
 	private String telefono;
 	private String correoElectronico;
-	
-	@NotBlank(message="Genero requerido")
 	private String genero;
-	
 	private String direccion;
 	private String nacionalidad;
-	
-	@NotNull(message="Fecha de nacimiento requerido")
 	private Date fechaNacimiento;
 
-	@NotNull(message="Vigencia requerida")
 	private Boolean vigencia;
-	
-	@NotBlank(message="Usuario requerido")
 	private String usuario;
-	
-	@NotBlank(message="Password requerido")
 	private String password;
-	
-	@NotNull(message="Id perfil requerido")
 	private Integer idPerfil;
 
-	@NotBlank(message="Usuario que registra requerido")
-	private String usuarioRegistra;
-
+	@NotBlank(message="Usuario que actualiza requerido")
+	private String usuarioActualiza;
+	
 }

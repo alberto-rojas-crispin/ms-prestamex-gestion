@@ -9,5 +9,7 @@ public class CONSTANTES {
 	public static final String CONTROLLER_USUARIO_NAME = "Control de usuarios";
 	public static final String CONTROLLER_USUARIO_DESCRIPTION = "Operaciones para el control de usuarios";
 	public static final String CONTROLLER_USUARIO_OPER_REGISTRAR = "Operación para registrar usuario con el acceso a la aplicación";
+	public static final String CONTROLLER_USUARIO_OPER_ACTUALIZAR = "Operación para actualizar los datos del usuario con acceso a la aplicación";
+	public static final String CONTROLLER_USUARIO_OPER_CONSULTAR = "Operación para consultar a todos los usuarios de la aplicación";
 	
 }

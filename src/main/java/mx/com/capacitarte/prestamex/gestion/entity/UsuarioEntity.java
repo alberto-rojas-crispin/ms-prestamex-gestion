@@ -52,4 +52,10 @@ public class UsuarioEntity implements Serializable {
 	@Column(name = "FTC_USUARIO_CREACION")
 	private String usuarioCreacion;
 
+	@Column(name = "FTC_USUARIO_ACTUALIZA")
+	private String usuarioActualiza;
+	
+	@Column(name = "FTD_FECHA_ACTUALIZA")
+	private ZonedDateTime fechaActualiza;
+	
 }

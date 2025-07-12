@@ -48,7 +48,7 @@ public class EmpleadoEntity implements Serializable {
 	private String telefono;
 	
 	@Column(name = "FTC_DIRECCION")
-	private String direcion;
+	private String direccion;
 	
 	@Column(name = "FTC_GENERO")
 	private String genero;
@@ -68,4 +68,10 @@ public class EmpleadoEntity implements Serializable {
 	@Column(name = "FTC_USUARIO_CREACION")
 	private String usuarioCreacion;
 
+	@Column(name = "FTC_USUARIO_ACTUALIZA")
+	private String usuarioActualiza;
+	
+	@Column(name = "FTD_FECHA_ACTUALIZA")
+	private ZonedDateTime fechaActualiza;
+	
 }
