@@ -1,6 +1,8 @@
 package mx.com.capacitarte.prestamex.gestion.services.impl;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import mx.com.capacitarte.prestamex.gestion.beans.RespuestaPersistenciaBean;
+import mx.com.capacitarte.prestamex.gestion.beans.response.UsuarioConsultarBean;
 import mx.com.capacitarte.prestamex.gestion.entity.EmpleadoEntity;
 import mx.com.capacitarte.prestamex.gestion.entity.UsuarioEntity;
 import mx.com.capacitarte.prestamex.gestion.enums.MSPrestamexGestionResponseEnum;
+import mx.com.capacitarte.prestamex.gestion.enums.UsuariosConsultarEnum;
 import mx.com.capacitarte.prestamex.gestion.exceptions.ServiceException;
+import mx.com.capacitarte.prestamex.gestion.filters.UsuarioFilter;
+import mx.com.capacitarte.prestamex.gestion.repositories.ICustomUsuariosRepository;
 import mx.com.capacitarte.prestamex.gestion.repositories.IEmpleadosRepository;
 import mx.com.capacitarte.prestamex.gestion.repositories.IUsuariosRepository;
 import mx.com.capacitarte.prestamex.gestion.services.IUsuariosService;
@@ -28,6 +34,9 @@ public class UsuariosServiceImpl implements IUsuariosService {
 	
 	@Autowired
 	IEmpleadosRepository empleadosRepository;
+	
+	@Autowired
+	ICustomUsuariosRepository customUsuariosRepository;
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
@@ -151,6 +160,88 @@ public class UsuariosServiceImpl implements IUsuariosService {
                     e.getMessage());
 			
 		}
+	}
+
+	@Override
+	public Optional<List<UsuarioConsultarBean>> consultarUsuarios(UsuarioFilter filter) throws ServiceException {
+		log.info("service: consultarUsuarios");
+		
+		try {
+			log.info("Filtros: " + filter.toString());
+			
+			List<Object> usuariosObject = customUsuariosRepository.consultarUsuarios(filter);
+			
+			log.info("Registros encontrados: {}", usuariosObject.size());
+
+			if (usuariosObject.isEmpty()) {
+				return Optional.empty();
+			}
+			
+			List<UsuarioConsultarBean> lstUsuariosBean = new ArrayList<>();
+			usuariosObject.stream()
+				.map(result -> (Object[]) result).forEach(row -> {
+					
+					UsuarioConsultarBean usuarioBean = UsuarioConsultarBean.builder()
+							.idEmpleado(row[UsuariosConsultarEnum.FTN_ID_EMPLEADO.getValue()] != null ? 
+									Integer.parseInt(row[UsuariosConsultarEnum.FTN_ID_EMPLEADO.getValue()].toString()) : null)	
+							.nombreUsuario(row[UsuariosConsultarEnum.FTC_NOMBRE.getValue()] != null ? 
+									row[UsuariosConsultarEnum.FTC_NOMBRE.getValue()].toString() : "")
+							.apPaterno(row[UsuariosConsultarEnum.FTC_APELLIDO_PATERNO.getValue()] != null ? 
+									row[UsuariosConsultarEnum.FTC_APELLIDO_PATERNO.getValue()].toString() : "")
+							.apMaterno(row[UsuariosConsultarEnum.FTC_APELLIDO_MATERNO.getValue()] != null ? 
+									row[UsuariosConsultarEnum.FTC_APELLIDO_MATERNO.getValue()].toString() : "")
+							.telefono(row[UsuariosConsultarEnum.FTC_TELEFONO.getValue()] != null ? 
+									row[UsuariosConsultarEnum.FTC_TELEFONO.getValue()].toString() : "")
+							.correoElectronico(row[UsuariosConsultarEnum.FTC_EMAIL.getValue()] != null ? 
+									row[UsuariosConsultarEnum.FTC_EMAIL.getValue()].toString() : "")
+							.genero(row[UsuariosConsultarEnum.FTC_GENERO.getValue()] != null ? 
+									row[UsuariosConsultarEnum.FTC_GENERO.getValue()].toString() : "")
+							
+							
+							.direccion(row[UsuariosConsultarEnum.FTC_DIRECCION.getValue()] != null ? 
+									row[UsuariosConsultarEnum.FTC_DIRECCION.getValue()].toString() : "")
+							.nacionalidad(row[UsuariosConsultarEnum.FTC_NACIONALIDAD.getValue()] != null ? 
+									row[UsuariosConsultarEnum.FTC_NACIONALIDAD.getValue()].toString() : "")
+							.fechaNacimiento(row[UsuariosConsultarEnum.FTD_FECHA_NACIMIENTO.getValue()] != null ? 
+									row[UsuariosConsultarEnum.FTD_FECHA_NACIMIENTO.getValue()].toString() : "")
+							.vigencia(row[UsuariosConsultarEnum.FCB_VIGENCIA.getValue()] != null ? 
+									row[UsuariosConsultarEnum.FCB_VIGENCIA.getValue()].toString().equals("true") ? true : false : false)
+							
+							
+							.idUsuario(row[UsuariosConsultarEnum.FTN_ID_USUARIO.getValue()] != null ? 
+									Integer.parseInt(row[UsuariosConsultarEnum.FTN_ID_USUARIO.getValue()].toString()) : null)
+							.usuario(row[UsuariosConsultarEnum.FTC_USUARIO.getValue()] != null ? 
+									row[UsuariosConsultarEnum.FTC_USUARIO.getValue()].toString() : "")
+							.idPerfil(row[UsuariosConsultarEnum.FCN_ID_PERFIL.getValue()] != null ? 
+									Integer.parseInt(row[UsuariosConsultarEnum.FCN_ID_PERFIL.getValue()].toString()) : null)
+							.perfil(row[UsuariosConsultarEnum.PERFIL.getValue()] != null ? 
+									row[UsuariosConsultarEnum.PERFIL.getValue()].toString() : "")
+							.descPerfil(row[UsuariosConsultarEnum.DESC_PERFIL.getValue()] != null ? 
+									row[UsuariosConsultarEnum.DESC_PERFIL.getValue()].toString() : "")
+						
+							.build();
+				
+					lstUsuariosBean.add(usuarioBean);	
+			});
+			
+			return Optional.of(lstUsuariosBean);
+
+		} catch (SQLException sqlEx) {
+			log.error(sqlEx.getMessage());
+			throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR,
+					MSPrestamexGestionResponseEnum.WS_DATA_ERROR.getCodeResponse(),
+					MSPrestamexGestionResponseEnum.WS_DATA_ERROR.getMessage() + " - consultarUsuarios",
+                    sqlEx.getMessage());
+			
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR,
+					MSPrestamexGestionResponseEnum.WS_BUSINESS_ERROR.getCodeResponse(),
+					MSPrestamexGestionResponseEnum.WS_BUSINESS_ERROR.getMessage() + " - consultarUsuarios",
+                    e.getMessage());
+			
+		}
+		
 	}
 
 
